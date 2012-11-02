@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+    <link href="{{ STATIC_URL }}css/datepicker.css" rel="stylesheet">
+    <script type="text/javascript" src="{{ STATIC_URL }}js/underscore-min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/backbone-min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/handlebars-1.0.0.beta.6.js"></script>
+    <script src="{{ STATIC_URL }}bootstrap/js/bootstrap.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-datepicker.js"></script>
+    <script src="{{ STATIC_URL }}js/bootstrap-datepicker.pt-BR.js"></script>
+    <script src="{{ STATIC_URL }}js/rrule.js"></script>
+    <script src="{{ STATIC_URL }}js/moment.min.js"></script>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/absenteeism.js"></script>
+
+
+    <script type="text/javascript">
+
+    $(document).ready( function () {
+        $("#table_body").find('input[type=text]').datepicker({
+                    format: 'dd/mm/yyyy',
+                    autoclose: true,
+                    language: 'pt-BR',
+                });
+    });
+
+    </script>
+
+
+{% endblock %}
+
+
+{% block content %}
+<section id="main">
+  <div class="page-header">
+      <h1>Absenteísmo</h1>
+  </div>
+
+<div class="row">
+    <div class="span12">
+      <div id="main">
+        <p><span class="add"><i class="icon-plus"></i> Adicionar outra entrada</span></p>
+        <table class="table">
+          <thead>
+            <tr>
+                <th></td>
+                <th>Período Atestado</th>
+                <th>Período Abonado</th>
+            </tr>
+          </thead>
+          <tbody id="table_body">
+              <tr>
+                <td><i class="icon-remove remove"></td>
+                <td>
+                    <input type="text" name="inicio_atestado" class="input-small"><br>
+                    <input type="text" name="fim_atestado" class="input-small" >
+                </td>
+                <td><input type="text" name="inicio_revisado" class="input-small"><br>
+                    <input type="text" name="fim_revisado" class="input-small">
+                </td>
+              </tr>
+          </tbody>
+        </table>
+        <div class="row">
+          <div class="span4 offset4">
+            <p>Observações Administrativas</p>
+            <textarea id="textarea" class="input-xlarge" name="obs_adm" rows="3"></textarea>
+            <p>Observações Médicas</p>
+            <textarea id="textarea" class="input-xlarge" name="obs_med" ows="3"></textarea>
+          </div>
+        </div>
+        <div class="row">
+          <div class="span2 offset10">
+            <a class="btn btn-primary confirm">Confirmar</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal hide" id="myModal">
+        <div class="modal-header">
+          <h3>Erro de Validação</h3>
+        </div>
+        <div class="modal-body">
+          <p></p>
+        </div>
+        <div class="modal-footer">
+          <a href="#" class="btn" data-dismiss="modal">Close</a>
+        </div>
+      </div>
+    </div>
+</div>
+</section>
+{% endblock %}
+

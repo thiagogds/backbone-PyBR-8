@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta name="description" content="EventeX" />
+  <meta http-equiv='content-Language' content='en-US' />
+  <link type="image/x-icon" href="{{ STATIC_URL }}favicon.ico" rel="shortcut icon" />
+
+  <title>PythonBrasil [8]</title>
+
+  <link href="{{ STATIC_URL }}bootstrap/css/bootstrap.css" rel="stylesheet">
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+
+  {% block head_extra %}
+  {% endblock %}
+</head>
+<body class="grafismo">
+  <div id="page">
+    <div id="header">
+      <center>
+      <h1>Django e Backbone, uma parceria de sucesso!</h1>
+      </center>
+    </div>
+    <hr>
+    <div class="container">
+      {% block content %}
+      {% endblock content %}
+    </div>
+    <hr>
+  </div>
+</body>
+</html>
