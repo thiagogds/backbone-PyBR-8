@@ -2,15 +2,18 @@
     window.Absenteeism = Backbone.Model.extend();
 
     window.AbsenteeismView = Backbone.View.extend({
+        events: {
+            'click .remove': 'remove',
+        },
         tagName: 'tr',
         initialize: function() {
             _.bindAll(this, 'render');
+            _.bindAll(this, 'remove');
         },
         render: function() {
             var abs_template_html = $('#absenteeism_form').html();
             var abs_template = Handlebars.compile(abs_template_html);
 
-            debugger
             $(this.el).html(abs_template(this.model.toJSON()));
 
             var self = this;
@@ -21,6 +24,10 @@
             })
 
             return this;
+        },
+        remove: function() {
+            $(this.el).remove();
+            this.model.collection.remove(this.model);
         },
     });
 

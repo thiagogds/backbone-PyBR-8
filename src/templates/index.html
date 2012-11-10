@@ -27,6 +27,7 @@
         <table class="table">
           <thead>
             <tr>
+                <th></th>
                 <th>Período Atestado</th>
                 <th>Período Abonado</th>
             </tr>
@@ -65,6 +66,7 @@
 </section>
 {% verbatim %}
 <script id="absenteeism_form" type="text/x-handlebars-template">
+    <td><button class="close remove">&times;</button></td>
     <td>
       <input type="text" name="inicio_atestado" class="input-small" value="{{ inicio_atestado }}"><br>
       <input type="text" name="fim_atestado" class="input-small" value="{{ fim_atestado }}">

@@ -58,6 +58,27 @@ describe("Absenteeism", function() {
             });
         });
     });
+
+    describe("AbsenteeismView", function() {
+        beforeEach(function() {
+            loadFixtures("absenteeism.html");
+            var absenteeism = new Absenteeism(this.initial_data);
+            this.newAbsenteeismCollection = new AbsenteeismCollection([absenteeism])
+        });
+
+        describe("When removing", function() {
+            it("should remove the model from collection", function() {
+                var absenteeism =  this.newAbsenteeismCollection.first()
+                var absenteeismView = new AbsenteeismView({model: absenteeism});
+                expect(this.newAbsenteeismCollection.length).toEqual(1);
+
+                absenteeismView.remove();
+
+                expect(this.newAbsenteeismCollection.length).toEqual(0);
+                var inicio_atestado = $("input[name=inicio_atestado]");
+            });
+        });
+    });
 });
 
 
