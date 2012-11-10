@@ -13,14 +13,11 @@ describe("Absenteeism", function() {
     });
 
     describe("AbsenteeismReport View", function() {
+        beforeEach(function() {
+            loadFixtures("absenteeism.html");
+        });
+
         describe("When rendering", function() {
-            beforeEach(function() {
-                loadFixtures("absenteeism.html");
-            });
-
-            afterEach(function() {
-            });
-
             it("should show the correct components", function() {
                 this.absenteeismReportView.render();
                 var inicio_atestado = $("input[name=inicio_atestado]");
@@ -33,6 +30,31 @@ describe("Absenteeism", function() {
                 expect(fim_atestado).toHaveValue("04/01/2012");
                 expect(inicio_revisado).toHaveValue("03/01/2012");
                 expect(fim_revisado).toHaveValue("04/01/2012");
+            });
+        });
+
+        describe("When adding", function() {
+
+            it("should show the correct components", function() {
+                var new_absenteeism =  new Absenteeism({
+                  'inicio_atestado': "05/01/2012",
+                  'fim_atestado': "06/01/2012",
+                  'inicio_revisado': "05/01/2012",
+                  'fim_revisado': "06/01/2012",
+                });
+
+                this.absenteeismReportView.collection.add(new_absenteeism);
+
+                var inicio_atestado = $("input[name=inicio_atestado]");
+                var fim_atestado = $("input[name=fim_atestado]");
+                var inicio_revisado = $("input[name=inicio_revisado]");
+                var fim_revisado = $("input[name=fim_revisado]");
+                var dias_negados = $("span.difference");
+
+                expect(inicio_atestado).toHaveValue("05/01/2012");
+                expect(fim_atestado).toHaveValue("06/01/2012");
+                expect(inicio_revisado).toHaveValue("05/01/2012");
+                expect(fim_revisado).toHaveValue("06/01/2012");
             });
         });
     });

@@ -29,9 +29,15 @@
     });
 
     window.AbsenteeismReport = Backbone.View.extend({
+        events: {
+            'click .add': 'add_entry',
+        },
         el: function () { return $('#main'); },
         initialize: function() {
             _.bindAll(this, 'render');
+            _.bindAll(this, 'add');
+            _.bindAll(this, 'add_entry');
+            this.collection.on('add', this.add);
         },
         render: function() {
             var view = $(this.el).find('#table_body');
@@ -40,6 +46,13 @@
                 view.append(model_view.render().el);
             });
             return this;
+        },
+        add: function(item) {
+            var entry = new AbsenteeismView({model:item});
+            $(this.el).find('#table_body').append(entry.render().el);
+        },
+        add_entry: function() {
+            this.collection.add(new_absenteeism());
         },
     });
 })();
