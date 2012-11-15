@@ -1,5 +1,37 @@
 (function() {
-    window.Absenteeism = Backbone.Model.extend();
+    //convert string to date in pt-br format DD/MM/YYYY
+    var strdt = function(str) {
+        return moment(str, "DD/MM/YYYY").toDate();
+    }
+
+    window.Absenteeism = Backbone.Model.extend({
+        validate: function(attributes) {
+            var data_inicio_atestado = strdt(attributes.inicio_atestado);
+            var data_fim_atestado = strdt(attributes.fim_atestado);
+            var data_inicio_revisado = strdt(attributes.inicio_revisado);
+            var data_fim_revisado = strdt(attributes.fim_revisado);
+
+            if(data_inicio_atestado.getYear() <  0 ||
+               data_fim_atestado.getYear() <  0 ||
+               data_inicio_revisado.getYear() <  0 ||
+               data_fim_revisado.getYear() <  0 ) {
+                return "Data inválida";
+            }
+
+            if (data_fim_atestado < data_inicio_atestado) {
+                return "Data Final Atestadada não pode ser menor que a Data Inicial Atestada";
+            }
+            if (data_fim_revisado < data_inicio_revisado) {
+                return "Data Final Abonada não pode ser menor que a Data Inicial Abonada";
+            }
+            if (data_inicio_revisado < data_inicio_atestado) {
+                return "Data Incial Abonada não pode ser menor que a Data Inicial Atestada";
+            }
+            if (data_fim_revisado > data_fim_atestado){
+                return "Data Final Abonada não pode ser maior que a Data Final Atestada";
+            }
+        }
+    });
 
     window.AbsenteeismView = Backbone.View.extend({
         events: {

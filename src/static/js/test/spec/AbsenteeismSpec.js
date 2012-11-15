@@ -79,6 +79,78 @@ describe("Absenteeism", function() {
             });
         });
     });
+
+    describe("AbsenteeismModel", function() {
+        beforeEach(function() {
+            this.eventSpy = sinon.spy();
+        });
+        describe("When validating", function() {
+            it("should check that first atested date is lower then second date", function() {
+                this.absenteeism.bind("error", this.eventSpy);
+
+                this.initial_data["fim_atestado"] = "01/01/2012";
+                this.absenteeism.set(this.initial_data);
+
+                expect(this.eventSpy).toHaveBeenCalledOnce();
+                expect(this.eventSpy).toHaveBeenCalledWith(
+                    this.absenteeism,
+                    "Data Final Atestadada não pode ser menor que a Data Inicial Atestada"
+                );
+            });
+
+            it("should check that first conceived date is lower then second date", function() {
+                this.absenteeism.bind("error", this.eventSpy);
+
+                this.initial_data["fim_revisado"] = "01/01/2012";
+                this.absenteeism.set(this.initial_data);
+
+                expect(this.eventSpy).toHaveBeenCalledOnce();
+                expect(this.eventSpy).toHaveBeenCalledWith(
+                    this.absenteeism,
+                    "Data Final Abonada não pode ser menor que a Data Inicial Abonada"
+                );
+            });
+
+            it("should check that first conceived date is higher or equal then first atested date", function() {
+                this.absenteeism.bind("error", this.eventSpy);
+
+                this.initial_data["inicio_revisado"] = "01/01/2012";
+                this.absenteeism.set(this.initial_data);
+
+                expect(this.eventSpy).toHaveBeenCalledOnce();
+                expect(this.eventSpy).toHaveBeenCalledWith(
+                    this.absenteeism,
+                    "Data Incial Abonada não pode ser menor que a Data Inicial Atestada"
+                );
+            });
+
+            it("should check that last conceived date is lower or equal then first atested date", function() {
+                this.absenteeism.bind("error", this.eventSpy);
+
+                this.initial_data["fim_revisado"] = "05/01/2012";
+                this.absenteeism.set(this.initial_data);
+
+                expect(this.eventSpy).toHaveBeenCalledOnce();
+                expect(this.eventSpy).toHaveBeenCalledWith(
+                    this.absenteeism,
+                    "Data Final Abonada não pode ser maior que a Data Final Atestada"
+                );
+            });
+
+            it("should check for a valid date", function() {
+                this.absenteeism.bind("error", this.eventSpy);
+
+                this.initial_data["fim_revisado"] = "Data inválida";
+                this.absenteeism.set(this.initial_data);
+
+                expect(this.eventSpy).toHaveBeenCalledOnce();
+                expect(this.eventSpy).toHaveBeenCalledWith(
+                    this.absenteeism,
+                    "Data inválida"
+                );
+            });
+        });
+    });
 });
 
 
