@@ -36,11 +36,18 @@
     window.AbsenteeismView = Backbone.View.extend({
         events: {
             'click .remove': 'remove',
+            'blur input[name=inicio_atestado]': 'update_value',
+            'blur input[name=fim_atestado]': 'update_value',
+            'blur input[name=inicio_revisado]': 'update_value',
+            'blur input[name=fim_revisado]': 'update_value'
         },
         tagName: 'tr',
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'remove');
+            _.bindAll(this, 'update_value');
+            _.bindAll(this, 'restore_view');
+            this.model.on('error', this.restore_view);
         },
         render: function() {
             var abs_template_html = $('#absenteeism_form').html();
@@ -53,13 +60,36 @@
                 format: 'dd/mm/yyyy',
                 autoclose: true,
                 language: 'pt-BR',
-            })
+            }).on('changeDate', function(ev) {
+                self.update_value(ev);
+            });
 
             return this;
         },
         remove: function() {
             $(this.el).remove();
             this.model.collection.remove(this.model);
+        },
+        update_value: function(event) {
+            var data_inicio_atestado = $(this.el).find('input[name=inicio_atestado]').val();
+            var data_fim_atestado = $(this.el).find('input[name=fim_atestado]').val();
+            var data_inicio_revisado = $(this.el).find('input[name=inicio_revisado]').val();
+            var data_fim_revisado = $(this.el).find('input[name=fim_revisado]').val();
+
+            this.model.set({
+                'inicio_atestado': data_inicio_atestado,
+                'fim_atestado': data_fim_atestado,
+                'inicio_revisado': data_inicio_revisado,
+                'fim_revisado': data_fim_revisado,
+            });
+        },
+        restore_view: function(model, message) {
+            $(this.el).find('input[name=inicio_atestado]').val(this.model.get('inicio_atestado'));
+            $(this.el).find('input[name=fim_atestado]').val(this.model.get('fim_atestado'));
+            $(this.el).find('input[name=inicio_revisado]').val(this.model.get('inicio_revisado'));
+            $(this.el).find('input[name=fim_revisado]').val(this.model.get('fim_revisado'));
+            $('#myModal .modal-body p').html(message);
+            $('#myModal').modal('toggle');
         },
     });
 
