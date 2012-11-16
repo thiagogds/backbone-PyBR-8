@@ -1,10 +1,10 @@
 describe("Absenteeism", function() {
     beforeEach(function() {
         this.initial_data = {
-          'inicio_atestado': "03/01/2012",
-          'fim_atestado': "04/01/2012",
-          'inicio_revisado': "03/01/2012",
-          'fim_revisado': "04/01/2012",
+          'atested_begin': "03/01/2012",
+          'atested_end': "04/01/2012",
+          'revised_begin': "03/01/2012",
+          'revised_end': "04/01/2012",
         };
 
         this.absenteeism = new Absenteeism(this.initial_data);
@@ -20,16 +20,16 @@ describe("Absenteeism", function() {
         describe("When rendering", function() {
             it("should show the correct components", function() {
                 this.absenteeismReportView.render();
-                var inicio_atestado = $("input[name=inicio_atestado]");
-                var fim_atestado = $("input[name=fim_atestado]");
-                var inicio_revisado = $("input[name=inicio_revisado]");
-                var fim_revisado = $("input[name=fim_revisado]");
+                var atested_begin = $("input[name=atested_begin]");
+                var atested_end = $("input[name=atested_end]");
+                var revised_begin = $("input[name=revised_begin]");
+                var revised_end = $("input[name=revised_end]");
                 var dias_negados = $("span.difference");
 
-                expect(inicio_atestado).toHaveValue("03/01/2012");
-                expect(fim_atestado).toHaveValue("04/01/2012");
-                expect(inicio_revisado).toHaveValue("03/01/2012");
-                expect(fim_revisado).toHaveValue("04/01/2012");
+                expect(atested_begin).toHaveValue("03/01/2012");
+                expect(atested_end).toHaveValue("04/01/2012");
+                expect(revised_begin).toHaveValue("03/01/2012");
+                expect(revised_end).toHaveValue("04/01/2012");
             });
         });
 
@@ -37,24 +37,24 @@ describe("Absenteeism", function() {
 
             it("should show the correct components", function() {
                 var new_absenteeism =  new Absenteeism({
-                  'inicio_atestado': "05/01/2012",
-                  'fim_atestado': "06/01/2012",
-                  'inicio_revisado': "05/01/2012",
-                  'fim_revisado': "06/01/2012",
+                  'atested_begin': "05/01/2012",
+                  'atested_end': "06/01/2012",
+                  'revised_begin': "05/01/2012",
+                  'revised_end': "06/01/2012",
                 });
 
                 this.absenteeismReportView.collection.add(new_absenteeism);
 
-                var inicio_atestado = $("input[name=inicio_atestado]");
-                var fim_atestado = $("input[name=fim_atestado]");
-                var inicio_revisado = $("input[name=inicio_revisado]");
-                var fim_revisado = $("input[name=fim_revisado]");
+                var atested_begin = $("input[name=atested_begin]");
+                var atested_end = $("input[name=atested_end]");
+                var revised_begin = $("input[name=revised_begin]");
+                var revised_end = $("input[name=revised_end]");
                 var dias_negados = $("span.difference");
 
-                expect(inicio_atestado).toHaveValue("05/01/2012");
-                expect(fim_atestado).toHaveValue("06/01/2012");
-                expect(inicio_revisado).toHaveValue("05/01/2012");
-                expect(fim_revisado).toHaveValue("06/01/2012");
+                expect(atested_begin).toHaveValue("05/01/2012");
+                expect(atested_end).toHaveValue("06/01/2012");
+                expect(revised_begin).toHaveValue("05/01/2012");
+                expect(revised_end).toHaveValue("06/01/2012");
             });
         });
 
@@ -94,7 +94,7 @@ describe("Absenteeism", function() {
                 absenteeismView.remove();
 
                 expect(this.newAbsenteeismCollection.length).toEqual(0);
-                var inicio_atestado = $("input[name=inicio_atestado]");
+                var atested_begin = $("input[name=atested_begin]");
             });
         });
     });
@@ -107,7 +107,7 @@ describe("Absenteeism", function() {
             it("should check that first atested date is lower then second date", function() {
                 this.absenteeism.bind("error", this.eventSpy);
 
-                this.initial_data["fim_atestado"] = "01/01/2012";
+                this.initial_data["atested_end"] = "01/01/2012";
                 this.absenteeism.set(this.initial_data);
 
                 expect(this.eventSpy).toHaveBeenCalledOnce();
@@ -120,7 +120,7 @@ describe("Absenteeism", function() {
             it("should check that first conceived date is lower then second date", function() {
                 this.absenteeism.bind("error", this.eventSpy);
 
-                this.initial_data["fim_revisado"] = "01/01/2012";
+                this.initial_data["revised_end"] = "01/01/2012";
                 this.absenteeism.set(this.initial_data);
 
                 expect(this.eventSpy).toHaveBeenCalledOnce();
@@ -133,7 +133,7 @@ describe("Absenteeism", function() {
             it("should check that first conceived date is higher or equal then first atested date", function() {
                 this.absenteeism.bind("error", this.eventSpy);
 
-                this.initial_data["inicio_revisado"] = "01/01/2012";
+                this.initial_data["revised_begin"] = "01/01/2012";
                 this.absenteeism.set(this.initial_data);
 
                 expect(this.eventSpy).toHaveBeenCalledOnce();
@@ -146,7 +146,7 @@ describe("Absenteeism", function() {
             it("should check that last conceived date is lower or equal then first atested date", function() {
                 this.absenteeism.bind("error", this.eventSpy);
 
-                this.initial_data["fim_revisado"] = "05/01/2012";
+                this.initial_data["revised_end"] = "05/01/2012";
                 this.absenteeism.set(this.initial_data);
 
                 expect(this.eventSpy).toHaveBeenCalledOnce();
@@ -159,7 +159,7 @@ describe("Absenteeism", function() {
             it("should check for a valid date", function() {
                 this.absenteeism.bind("error", this.eventSpy);
 
-                this.initial_data["fim_revisado"] = "Data inválida";
+                this.initial_data["revised_end"] = "Data inválida";
                 this.absenteeism.set(this.initial_data);
 
                 expect(this.eventSpy).toHaveBeenCalledOnce();

@@ -6,10 +6,10 @@
 
     window.Absenteeism = Backbone.Model.extend({
         validate: function(attributes) {
-            var data_inicio_atestado = strdt(attributes.inicio_atestado);
-            var data_fim_atestado = strdt(attributes.fim_atestado);
-            var data_inicio_revisado = strdt(attributes.inicio_revisado);
-            var data_fim_revisado = strdt(attributes.fim_revisado);
+            var data_inicio_atestado = strdt(attributes.atested_begin);
+            var data_fim_atestado = strdt(attributes.atested_end);
+            var data_inicio_revisado = strdt(attributes.revised_begin);
+            var data_fim_revisado = strdt(attributes.revised_end);
 
             if(data_inicio_atestado.getYear() <  0 ||
                data_fim_atestado.getYear() <  0 ||
@@ -36,10 +36,10 @@
     window.AbsenteeismView = Backbone.View.extend({
         events: {
             'click .remove': 'remove',
-            'blur input[name=inicio_atestado]': 'update_value',
-            'blur input[name=fim_atestado]': 'update_value',
-            'blur input[name=inicio_revisado]': 'update_value',
-            'blur input[name=fim_revisado]': 'update_value'
+            'blur input[name=atested_begin]': 'update_value',
+            'blur input[name=atested_end]': 'update_value',
+            'blur input[name=revised_begin]': 'update_value',
+            'blur input[name=revised_end]': 'update_value'
         },
         tagName: 'tr',
         initialize: function() {
@@ -71,23 +71,23 @@
             this.model.collection.remove(this.model);
         },
         update_value: function(event) {
-            var data_inicio_atestado = $(this.el).find('input[name=inicio_atestado]').val();
-            var data_fim_atestado = $(this.el).find('input[name=fim_atestado]').val();
-            var data_inicio_revisado = $(this.el).find('input[name=inicio_revisado]').val();
-            var data_fim_revisado = $(this.el).find('input[name=fim_revisado]').val();
+            var data_inicio_atestado = $(this.el).find('input[name=atested_begin]').val();
+            var data_fim_atestado = $(this.el).find('input[name=atested_end]').val();
+            var data_inicio_revisado = $(this.el).find('input[name=revised_begin]').val();
+            var data_fim_revisado = $(this.el).find('input[name=revised_end]').val();
 
             this.model.set({
-                'inicio_atestado': data_inicio_atestado,
-                'fim_atestado': data_fim_atestado,
-                'inicio_revisado': data_inicio_revisado,
-                'fim_revisado': data_fim_revisado,
+                'atested_begin': data_inicio_atestado,
+                'atested_end': data_fim_atestado,
+                'revised_begin': data_inicio_revisado,
+                'revised_end': data_fim_revisado,
             });
         },
         restore_view: function(model, message) {
-            $(this.el).find('input[name=inicio_atestado]').val(this.model.get('inicio_atestado'));
-            $(this.el).find('input[name=fim_atestado]').val(this.model.get('fim_atestado'));
-            $(this.el).find('input[name=inicio_revisado]').val(this.model.get('inicio_revisado'));
-            $(this.el).find('input[name=fim_revisado]').val(this.model.get('fim_revisado'));
+            $(this.el).find('input[name=atested_begin]').val(this.model.get('atested_begin'));
+            $(this.el).find('input[name=atested_end]').val(this.model.get('atested_end'));
+            $(this.el).find('input[name=revised_begin]').val(this.model.get('revised_begin'));
+            $(this.el).find('input[name=revised_end]').val(this.model.get('revised_end'));
             $('#myModal .modal-body p').html(message);
             $('#myModal').modal('toggle');
         },
@@ -136,8 +136,8 @@
             this.collection.each(function(model) {
                 values.push(model.toJSON());
             });
-            absenteeism['obs_administrativa'] = $(this.el).find('textarea[name="obs_adm"]').val();
-            absenteeism['obs_medica'] = $(this.el).find('textarea[name="obs_med"]').val();
+            absenteeism['adm_obs'] = $(this.el).find('textarea[name="adm_obs"]').val();
+            absenteeism['medical_obs'] = $(this.el).find('textarea[name="medical_obs"]').val();
             absenteeism['entries'] = values;
             post_data['absenteeism'] = absenteeism;
             $.ajax({
@@ -151,5 +151,45 @@
             });
         },
     });
+
+
+    jQuery(document).ajaxSend(function(event, xhr, settings) {
+        function getCookie(name) {
+            var cookieValue = null;
+            if (document.cookie && document.cookie != '') {
+                var cookies = document.cookie.split(';');
+                for (var i = 0; i < cookies.length; i++) {
+                    var cookie = jQuery.trim(cookies[i]);
+                    // Does this cookie string begin with the name we want?
+                    if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        function sameOrigin(url) {
+            // url could be relative or scheme relative or absolute
+            var host = document.location.host; // host + port
+            var protocol = document.location.protocol;
+            var sr_origin = '//' + host;
+            var origin = protocol + sr_origin;
+            // Allow absolute or scheme relative URLs to same origin
+            return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+                (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+                // or any other URL that isn't scheme relative or absolute i.e relative.
+                !(/^(\/\/|http:|https:).*/.test(url));
+        }
+        function safeMethod(method) {
+            return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+        }
+
+        if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        }
+    });
+
+
 })();
 

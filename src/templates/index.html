@@ -38,9 +38,9 @@
         <div class="row">
           <div class="span4 offset4">
             <p>Observações Administrativas</p>
-            <textarea id="textarea" class="input-xlarge" name="obs_adm" rows="3"></textarea>
+            <textarea id="textarea" class="input-xlarge" name="adm_obs" rows="3"></textarea>
             <p>Observações Médicas</p>
-            <textarea id="textarea" class="input-xlarge" name="obs_med" ows="3"></textarea>
+            <textarea id="textarea" class="input-xlarge" name="medical_obs" rows="3"></textarea>
           </div>
         </div>
         <div class="row">
@@ -68,12 +68,12 @@
 <script id="absenteeism_form" type="text/x-handlebars-template">
     <td><button class="close remove">&times;</button></td>
     <td>
-      <input type="text" name="inicio_atestado" class="input-small" value="{{ inicio_atestado }}"><br>
-      <input type="text" name="fim_atestado" class="input-small" value="{{ fim_atestado }}">
+      <input type="text" name="atested_begin" class="input-small" value="{{ atested_begin }}"><br>
+      <input type="text" name="atested_end" class="input-small" value="{{ atested_end }}">
    </td>
     <td>
-      <input type="text" name="inicio_revisado" class="input-small" value="{{ inicio_revisado }}"><br>
-      <input type="text" name="fim_revisado" class="input-small" value="{{ fim_revisado }}">
+      <input type="text" name="revised_begin" class="input-small" value="{{ revised_begin }}"><br>
+      <input type="text" name="revised_end" class="input-small" value="{{ revised_end }}">
     </td>
 </script>
 {% endverbatim %}
@@ -82,15 +82,16 @@
 
 <script type="text/javascript">
 
-    window.post_url = "/save"
+    window.csrf_token = "{{ csrf_token }}";
+    window.post_url = "{% url save %}"
     window.new_absenteeism = function() {
       var date_str = moment().format('DD/MM/YYYY');
       return new Absenteeism(
         {
-          'inicio_atestado': date_str,
-          'inicio_revisado': date_str,
-          'fim_atestado': date_str,
-          'fim_revisado': date_str,
+          'atested_begin': date_str,
+          'revised_begin': date_str,
+          'atested_end': date_str,
+          'revised_end': date_str,
         });
     }
     window.abs_collection = new AbsenteeismCollection([new_absenteeism()]);
