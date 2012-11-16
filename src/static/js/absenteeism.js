@@ -100,12 +100,15 @@
     window.AbsenteeismReport = Backbone.View.extend({
         events: {
             'click .add': 'add_entry',
+            'click .confirm': 'save',
         },
         el: function () { return $('#main'); },
         initialize: function() {
             _.bindAll(this, 'render');
             _.bindAll(this, 'add');
             _.bindAll(this, 'add_entry');
+            _.bindAll(this, 'save');
+            _.bindAll(this, 'process_success');
             this.collection.on('add', this.add);
         },
         render: function() {
@@ -122,6 +125,30 @@
         },
         add_entry: function() {
             this.collection.add(new_absenteeism());
+        },
+        process_success: function (data) {
+        },
+        save: function() {
+            var self = this;
+            var post_data = {};
+            var absenteeism = {};
+            var values = [];
+            this.collection.each(function(model) {
+                values.push(model.toJSON());
+            });
+            absenteeism['obs_administrativa'] = $(this.el).find('textarea[name="obs_adm"]').val();
+            absenteeism['obs_medica'] = $(this.el).find('textarea[name="obs_med"]').val();
+            absenteeism['entries'] = values;
+            post_data['absenteeism'] = absenteeism;
+            $.ajax({
+                type: 'POST',
+                url: window.post_url,
+                data: {data: JSON.stringify(post_data)},
+                success: function(data) {
+                    self.process_success(data);
+                },
+                dataType: 'json'
+            });
         },
     });
 })();

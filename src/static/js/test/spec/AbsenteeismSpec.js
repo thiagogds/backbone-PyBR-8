@@ -57,6 +57,25 @@ describe("Absenteeism", function() {
                 expect(fim_revisado).toHaveValue("06/01/2012");
             });
         });
+
+        describe("When save", function() {
+            it("should redirect to succes url for valid inputs", function() {
+                var response = {
+                    "succes_url": "/sucesso"
+                }
+
+                spyOn($, "ajax").andCallFake(function(params) {
+                    params.success(response);
+                });
+
+                spyOn(this.absenteeismReportView, 'process_success');
+
+                this.absenteeismReportView.save();
+
+                expect(this.absenteeismReportView.process_success.calls.length).toEqual(1);
+                expect(this.absenteeismReportView.process_success.calls[0].args[0]).toEqual(response);
+            });
+        });
     });
 
     describe("AbsenteeismView", function() {
