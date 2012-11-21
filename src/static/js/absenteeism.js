@@ -109,6 +109,7 @@
             _.bindAll(this, 'add_entry');
             _.bindAll(this, 'save');
             _.bindAll(this, 'process_success');
+            _.bindAll(this, 'process_error');
             this.collection.on('add', this.add);
         },
         render: function() {
@@ -127,6 +128,10 @@
             this.collection.add(new_absenteeism());
         },
         process_success: function (data) {
+            alert("Salvou");
+        },
+        process_error: function (data) {
+            alert(data.responseText);
         },
         save: function() {
             var self = this;
@@ -146,6 +151,9 @@
                 data: {data: JSON.stringify(post_data)},
                 success: function(data) {
                     self.process_success(data);
+                },
+                error: function(data) {
+                    self.process_error(data);
                 },
                 dataType: 'json'
             });

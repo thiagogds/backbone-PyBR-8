@@ -1,6 +1,8 @@
 # coding: utf-8
 from django.test import TestCase
+from django.core.urlresolvers import reverse
 
+from models import AbsenteeismEntry, Absenteeism
 from forms import AbsenteeismEntryForm
 
 class HomepageTest(TestCase):
@@ -53,3 +55,36 @@ class AbsenteeismEntryFormTest(TestCase):
 
         self.assertFalse(form.is_valid())
         self.assertIn(u'Data Final Abonada não pode ser maior que a Data Final Atestada', form.errors.get('__all__'))
+
+class TestSaveView(TestCase):
+    def setUp(self):
+        self.post_data = {
+            u'data':
+                [
+                    u'{ \
+                        "absenteeism": \
+                            {\
+                                "adm_obs":"Obs Adm",\
+                                "medical_obs":"Obs Médica",\
+                                "entries":\
+                                    [\
+                                        {\
+                                            "atested_begin":"16/11/2012",\
+                                            "revised_begin":"16/11/2012",\
+                                            "atested_end":"16/11/2012",\
+                                            "revised_end":"16/11/2012"\
+                                        }\
+                                    ]\
+                            }\
+                        }'
+                ]
+        }
+
+    def test_correct_save_absenteeism_and_entries(self):
+        response = self.client.post(reverse('save'), self.post_data)
+
+        absenteeism = Absenteeism.objects.get(id=1)
+        absenteeism_entry = AbsenteeismEntry.objects.get(id=1)
+
+        self.assertTrue(absenteeism)
+        self.assertTrue(absenteeism_entry)
